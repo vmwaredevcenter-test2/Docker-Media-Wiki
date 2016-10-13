@@ -1,0 +1,63 @@
+'@type': "SoftwareComponentType"
+createdDate: "2015-12-03T20:27:15.919Z"
+lastUpdated: "2015-12-03T20:27:16.129Z"
+id: "Software.Docker"
+name: "Docker"
+publishStatus: "PUBLISHED"
+publishStatusName: "Published"
+schema:
+  fields:
+  - id: "host"
+    label: ""
+    description: ""
+    dataType:
+      type: "ref"
+      componentTypeId: "com.vmware.csp.iaas.blueprint.service"
+      classId: "Infrastructure.Machine.Schema"
+      label: "Machine"
+    state:
+      dependencies: []
+      facets:
+      - type: "mandatory"
+        value:
+          type: "constant"
+          value:
+            type: "boolean"
+            value: true
+      - type: "visible"
+        value:
+          type: "constantClause"
+          value:
+            type: "boolean"
+            value: false
+    isMultiValued: false
+containerFieldId: "host"
+lifecycleTasks:
+- createdDate: "2015-12-03T20:27:15.921Z"
+  lastUpdated: "2015-12-04T14:45:07.624Z"
+  script:
+    scriptContent: "/sbin/chkconfig docker on"
+    isRebootAfter: false
+    scriptTypeId: "Bash"
+  taskDescriptorRef:
+    id: "CONFIGURE"
+    label: "Configure"
+- createdDate: "2015-12-03T20:27:15.920Z"
+  lastUpdated: "2015-12-04T14:45:07.624Z"
+  script:
+    scriptContent: "/sbin/service docker start"
+    isRebootAfter: false
+    scriptTypeId: "Bash"
+  taskDescriptorRef:
+    id: "START"
+    label: "Start"
+- createdDate: "2015-12-03T20:27:15.919Z"
+  lastUpdated: "2015-12-04T14:45:07.624Z"
+  script:
+    scriptContent: "#mkdir /storage/docker\n#ln -s /storage/docker /var/lib/docker\n\
+      curl -sSL https://get.docker.com/ | sh"
+    isRebootAfter: false
+    scriptTypeId: "Bash"
+  taskDescriptorRef:
+    id: "INSTALL"
+    label: "Install"

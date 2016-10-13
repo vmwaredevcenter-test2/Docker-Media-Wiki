@@ -1,0 +1,207 @@
+id: MediaWiki2tier
+name: Docker MediaWiki 2 tier
+description: Media Wiki based on Docker Containers
+status: PUBLISHED
+properties:
+  __nsx.management_endpoint_name:
+    fixed: vCenter
+    secured: false
+    visible: false
+  __nsx.transport_zone_name:
+    fixed: Global_Transport_Zone
+    secured: false
+    visible: false
+components:
+  Application:
+    type: Infrastructure.CatalogItem.Machine.Virtual.vSphere
+    data:
+      _cluster:
+        fixed: 1
+        min: 1
+      action:
+        fixed: LinkedClone
+      allow_storage_policies:
+        fixed: false
+      blueprint_type:
+        fixed: '1'
+      cpu:
+        fixed: 1
+        min: 1
+      disks:
+      - capacity: 3
+        custom_properties: null
+        id: 1449239324378
+        initial_location: ''
+        is_clone: true
+        label: Hard disk 1
+        storage_reservation_policy: ''
+        userCreated: false
+        volumeId: 0
+      display_location:
+        fixed: false
+      guest_customization_specification: CentOS
+      machine_prefix:
+        fixed:
+          id: Use group default
+      max_network_adapters: {}
+      max_volumes: {}
+      memory:
+        fixed: 512
+        min: 512
+      nics:
+      - address: ''
+        assignment_type: Static
+        id: 0
+        load_balancing: ''
+        network: ${_resource~External192168110}
+        network_profile: External/192.168.110
+      provisioning_workflow:
+        fixed:
+          id: CloneWorkflow
+          label: CloneWorkflow
+      security_groups: []
+      security_tags: []
+      source_machine:
+        fixed:
+          id: 93f30417-e149-461f-afa6-c648ef49018f
+          label: linux-base-01a
+      source_machine_external_snapshot:
+        fixed: 4
+      source_machine_name:
+        fixed: linux-base-01a
+      source_machine_vmsnapshot:
+        fixed:
+          id: '4'
+      storage:
+        default: 3
+        max: 5
+        min: 3
+  Database:
+    type: Infrastructure.CatalogItem.Machine.Virtual.vSphere
+    data:
+      _cluster:
+        fixed: 1
+        min: 1
+      action:
+        fixed: LinkedClone
+      allow_storage_policies:
+        fixed: false
+      blueprint_type:
+        fixed: '1'
+      cpu:
+        fixed: 1
+        min: 1
+      disks:
+      - capacity: 3
+        custom_properties: null
+        id: 1449239337435
+        initial_location: ''
+        is_clone: true
+        label: Hard disk 1
+        storage_reservation_policy: ''
+        userCreated: false
+        volumeId: 0
+      display_location:
+        fixed: false
+      guest_customization_specification: CentOS
+      machine_prefix:
+        fixed:
+          id: Use group default
+      max_network_adapters: {}
+      max_volumes: {}
+      memory:
+        fixed: 512
+        min: 512
+      nics:
+      - address: ''
+        assignment_type: Static
+        id: 0
+        load_balancing: ''
+        network: ${_resource~External192168110}
+        network_profile: External/192.168.110
+      provisioning_workflow:
+        fixed:
+          id: CloneWorkflow
+          label: CloneWorkflow
+      security_groups: []
+      security_tags: []
+      source_machine:
+        fixed:
+          id: 93f30417-e149-461f-afa6-c648ef49018f
+          label: linux-base-01a
+      source_machine_external_snapshot:
+        fixed: 4
+      source_machine_name:
+        fixed: linux-base-01a
+      source_machine_vmsnapshot:
+        fixed:
+          id: '4'
+      storage:
+        fixed: 3
+        min: 3
+  Database_user:
+    type: Software.Databaseuser
+    data:
+      dbpassword:
+        fixed: ${_resource~MySQL~dbpassword}
+        secured: true
+      dbuser: root
+      host: ${_resource~MySQL}
+      targetuser: wiki
+  Docker:
+    type: Software.Docker
+    dependsOn:
+    - Linux_Configuration_1
+    data:
+      host: ${_resource~Application}
+  External192168110:
+    type: Infrastructure.Network.Network.Existing
+    data:
+      name:
+        fixed: External192168110
+      network_profile:
+        fixed: External/192.168.110
+  Linux_Configuration_1:
+    type: Software.LinuxConfiguration
+    data:
+      host: ${_resource~Application}
+  Linux_Configuration_2:
+    type: Software.LinuxConfiguration
+    data:
+      host: ${_resource~Database}
+  MediaWiki:
+    type: Software.MediaWiki
+    dependsOn:
+    - Database_user
+    data:
+      dbHost:
+        fixed: ${_resource~MySQL~host~ip_address}
+      dbPassword:
+        fixed: ${_resource~MySQL~dbpassword}
+      dbPort: '3306'
+      dbUser: wiki
+      host: ${_resource~Docker}
+      image:
+        default: synctree/mediawiki
+        required: true
+      name:
+        default: mediawiki
+        required: true
+      parameters: {}
+  MySQL:
+    type: Software.MySQL
+    data:
+      dbpassword:
+        default: ''
+        secured: true
+      host: ${_resource~Database}
+layout:
+  Application: 0,1
+  Database: 0,2
+  Database_user: 0,0
+  Docker: 0,0
+  External192168110: 1,0
+  Linux_Configuration_1: 1,0
+  Linux_Configuration_2: 1,0
+  MediaWiki: 0,0
+  MySQL: 0,0

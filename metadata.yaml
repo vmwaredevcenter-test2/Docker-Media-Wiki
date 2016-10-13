@@ -1,0 +1,27 @@
+name: "auto-generated-pkg-d0374efa-f714-4fd3-8ed1-6eddefd61d8e"
+productVersion: "7.0.0-SNAPSHOT"
+data:
+- locator: "composite-blueprint/MediaWiki2tier.yaml"
+  name: "Docker MediaWiki 2 tier"
+  description: "Docker MediaWiki 2 tier"
+  dependencies:
+  - "software-component/Software.MySQL.yaml"
+  - "software-component/Software.Databaseuser.yaml"
+  - "software-component/Software.MediaWiki.yaml"
+  - "software-component/Software.LinuxConfiguration.yaml"
+  - "software-component/Software.Docker.yaml"
+- locator: "software-component/Software.Databaseuser.yaml"
+  name: "Database user"
+  dependencies:
+  - "software-component/Software.MySQL.yaml"
+- locator: "software-component/Software.MySQL.yaml"
+  name: "MySQL"
+- locator: "software-component/Software.Docker.yaml"
+  name: "Docker"
+- locator: "software-component/Software.LinuxConfiguration.yaml"
+  name: "Linux Configuration"
+- locator: "software-component/Software.MediaWiki.yaml"
+  name: "MediaWiki"
+  dependencies:
+  - "software-component/Software.Docker.yaml"
+exportTime: "2015-12-21T14:14:09.613Z"

@@ -1,0 +1,141 @@
+'@type': "SoftwareComponentType"
+createdDate: "2015-12-03T20:27:16.571Z"
+lastUpdated: "2015-12-03T20:27:16.746Z"
+id: "Software.MediaWiki"
+name: "MediaWiki"
+publishStatus: "PUBLISHED"
+publishStatusName: "Published"
+schema:
+  fields:
+  - id: "dbPort"
+    label: "dbPort"
+    description: "Database port"
+    dataType:
+      type: "primitive"
+      typeId: "STRING"
+    state:
+      dependencies: []
+      facets:
+      - type: "defaultValue"
+        value:
+          type: "constant"
+          value:
+            type: "string"
+            value: "3306"
+    isMultiValued: false
+  - id: "image"
+    label: "image"
+    description: "Image"
+    dataType:
+      type: "primitive"
+      typeId: "STRING"
+    state:
+      dependencies: []
+      facets:
+      - type: "defaultValue"
+        value:
+          type: "constant"
+          value:
+            type: "string"
+            value: "synctree/mediawiki"
+      - type: "mandatory"
+        value:
+          type: "constant"
+          value:
+            type: "boolean"
+            value: true
+    isMultiValued: false
+  - id: "host"
+    label: ""
+    description: ""
+    dataType:
+      type: "ref"
+      componentTypeId: "com.vmware.csp.component.software.service"
+      classId: "softwareResourceType"
+      typeFilter: "Software.Docker"
+      label: "Docker"
+    state:
+      dependencies: []
+      facets:
+      - type: "mandatory"
+        value:
+          type: "constant"
+          value:
+            type: "boolean"
+            value: true
+      - type: "visible"
+        value:
+          type: "constantClause"
+          value:
+            type: "boolean"
+            value: false
+    isMultiValued: false
+  - id: "name"
+    label: "name"
+    description: "Name (alias)"
+    dataType:
+      type: "primitive"
+      typeId: "STRING"
+    state:
+      dependencies: []
+      facets:
+      - type: "mandatory"
+        value:
+          type: "constant"
+          value:
+            type: "boolean"
+            value: true
+    isMultiValued: false
+  - id: "dbUser"
+    label: "dbUser"
+    description: "Database User"
+    dataType:
+      type: "primitive"
+      typeId: "STRING"
+    state:
+      dependencies: []
+      facets: []
+    isMultiValued: false
+  - id: "dbHost"
+    label: "dbHost"
+    description: "Database host"
+    dataType:
+      type: "primitive"
+      typeId: "STRING"
+    state:
+      dependencies: []
+      facets: []
+    isMultiValued: false
+  - id: "parameters"
+    label: "parameters"
+    description: "Additional Parameters"
+    dataType:
+      type: "primitive"
+      typeId: "STRING"
+    state:
+      dependencies: []
+      facets: []
+    isMultiValued: false
+  - id: "dbPassword"
+    label: "dbPassword"
+    description: "Database password"
+    dataType:
+      type: "primitive"
+      typeId: "STRING"
+    state:
+      dependencies: []
+      facets: []
+    isMultiValued: false
+containerFieldId: "host"
+lifecycleTasks:
+- createdDate: "2015-12-03T20:27:16.572Z"
+  lastUpdated: "2015-12-03T20:27:16.572Z"
+  script:
+    scriptContent: "docker run --name ${name} -p 80:80 -e MEDIAWIKI_DB_USER=${dbUser}\
+      \ -e MEDIAWIKI_DB_PASSWORD=${dbPassword} -e MEDIAWIKI_DB_HOST=${dbHost}:${dbPort}\
+      \ -d ${image}\ndocker ps"
+    isRebootAfter: false
+    scriptTypeId: "Bash"
+  taskDescriptorRef:
+    id: "INSTALL"
+    label: "Install"

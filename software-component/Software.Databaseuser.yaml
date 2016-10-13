@@ -1,0 +1,103 @@
+'@type': "SoftwareComponentType"
+createdDate: "2015-12-03T20:27:16.911Z"
+lastUpdated: "2015-12-03T20:27:17.108Z"
+id: "Software.Databaseuser"
+name: "Database user"
+publishStatus: "PUBLISHED"
+publishStatusName: "Published"
+schema:
+  fields:
+  - id: "dbpassword"
+    label: "dbpassword"
+    description: "DB Password"
+    dataType:
+      type: "primitive"
+      typeId: "STRING"
+    state:
+      dependencies: []
+      facets:
+      - type: "defaultValue"
+        value:
+          type: "constant"
+          value:
+            type: "secureString"
+            value: ""
+      - type: "encrypted"
+        value:
+          type: "constant"
+          value:
+            type: "boolean"
+            value: true
+    isMultiValued: false
+  - id: "host"
+    label: ""
+    description: ""
+    dataType:
+      type: "ref"
+      componentTypeId: "com.vmware.csp.component.software.service"
+      classId: "softwareResourceType"
+      typeFilter: "Software.MySQL"
+      label: "MySQL"
+    state:
+      dependencies: []
+      facets:
+      - type: "mandatory"
+        value:
+          type: "constant"
+          value:
+            type: "boolean"
+            value: true
+      - type: "visible"
+        value:
+          type: "constantClause"
+          value:
+            type: "boolean"
+            value: false
+    isMultiValued: false
+  - id: "dbuser"
+    label: "dbuser"
+    description: "DB User"
+    dataType:
+      type: "primitive"
+      typeId: "STRING"
+    state:
+      dependencies: []
+      facets:
+      - type: "defaultValue"
+        value:
+          type: "constant"
+          value:
+            type: "string"
+            value: "root"
+    isMultiValued: false
+  - id: "targetuser"
+    label: "targetuser"
+    description: "User to create"
+    dataType:
+      type: "primitive"
+      typeId: "STRING"
+    state:
+      dependencies: []
+      facets:
+      - type: "defaultValue"
+        value:
+          type: "constant"
+          value:
+            type: "string"
+            value: ""
+    isMultiValued: false
+containerFieldId: "host"
+lifecycleTasks:
+- createdDate: "2015-12-03T20:27:16.912Z"
+  lastUpdated: "2015-12-03T20:27:16.912Z"
+  script:
+    scriptContent: "/usr/bin/mysql -e \"CREATE USER '$targetuser'@'%';\" --user=$dbuser\
+      \ --password=$dbpassword\n/usr/bin/mysql -e \"SET PASSWORD FOR '$targetuser'@'%'=PASSWORD('$dbpassword');\"\
+      \ --user=$dbuser --password=$dbpassword\n/usr/bin/mysql -e \"GRANT ALL PRIVILEGES\
+      \ ON *.* TO '$targetuser'@'%'IDENTIFIED BY '$dbpassword';\" --user=$dbuser --password=$dbpassword\n\
+      /usr/bin/mysql -e \"FLUSH PRIVILEGES;\" --user=$dbuser --password=$dbpassword"
+    isRebootAfter: false
+    scriptTypeId: "Bash"
+  taskDescriptorRef:
+    id: "INSTALL"
+    label: "Install"
